@@ -5,7 +5,7 @@ compile:
     #
     # Prerequisits
     #
-    FROM --platform=linux/amd64 ubuntu
+    FROM --platform=linux/amd64 earthly/dind:ubuntu-20.04-docker-27.2.1-1
     ENV EXAMPLES_VERSION=0.1.14
     ENV COMPACT_VERSION=0.18.2
 
