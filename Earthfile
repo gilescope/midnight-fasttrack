@@ -8,12 +8,14 @@ compile:
     FROM --platform=linux/amd64 earthly/dind:ubuntu-20.04-docker-27.2.1-1
     ENV EXAMPLES_VERSION=0.1.14
     ENV COMPACT_VERSION=0.18.2
+    # Turn off tracking for turbo build:
+    ENV DO_NOT_TRACK=1
 
     RUN apt-get update -qq \
      && apt-get upgrade -y -qq
     RUN apt-get install -y -qq curl
 
-    RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+    RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
     ENV NVM_DIR="$HOME/.nvm"
     # After following the NVM installation instructions, verify that NVM is installed:
     # (Docker Note: 'nvm' is a script, this is a way to auto-source it.)
@@ -84,7 +86,11 @@ compile:
     # RUN . $NVM_DIR/nvm.sh && npx turbo build
     RUN . $NVM_DIR/nvm.sh && npx turbo build
 
+    SAVE ARTIFACT /midnight-examples-$EXAMPLES_VERSION/examples/counter/contract/dist AS LOCAL ./counter/contract/dist
+    SAVE ARTIFACT /midnight-examples-$EXAMPLES_VERSION/examples/counter/counter-cli/dist AS LOCAL ./counter/counter-cli/dist
+
+
     # WORKDIR /midnight-examples-$EXAMPLES_VERSION/examples/counter/counter-cli
-    # RUN . $NVM_DIR/nvm.sh && yarn testnet-remote
+    # RUN . $NVM_DIR/nvm.sh && node --experimental-specifier-resolution=node dist/testnet-local.js
 
     # RUN . $NVM_DIR/nvm.sh && npx turbo test
