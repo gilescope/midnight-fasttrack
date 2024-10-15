@@ -7,7 +7,7 @@ compile:
     #
     FROM --platform=linux/amd64 ubuntu
     ENV EXAMPLES_VERSION=0.1.14
-    ENV COMPACT_VERSION=0.10.1
+    ENV COMPACT_VERSION=0.18.2
 
     RUN apt-get update -qq \
      && apt-get upgrade -y -qq
@@ -65,6 +65,9 @@ compile:
     # An easy way to install Yarn, now that you have Node configured, is with the corepack command:
     RUN . $NVM_DIR/nvm.sh && npm i -g corepack && corepack enable
 
+    # THIS WASN'T SPECIFIED IN THE DOCS but seemed needed to upgrade to latest version:
+    RUN . $NVM_DIR/nvm.sh && npm install -g npm
+
     # This succeeds silently, but you should see version information now if you type:
     RUN . $NVM_DIR/nvm.sh && yarn --version
 
@@ -79,7 +82,9 @@ compile:
 
     # Build both sub-projects at once by running the following command in the counter directory above the two sub-directories:
     # RUN . $NVM_DIR/nvm.sh && npx turbo build
+    RUN . $NVM_DIR/nvm.sh && npx turbo build
 
-    RUN . $NVM_DIR/nvm.sh && yarn testnet-remote
+    # WORKDIR /midnight-examples-$EXAMPLES_VERSION/examples/counter/counter-cli
+    # RUN . $NVM_DIR/nvm.sh && yarn testnet-remote
 
-#     RUN npx turbo test
+    # RUN . $NVM_DIR/nvm.sh && npx turbo test
